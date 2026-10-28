@@ -1,0 +1,14 @@
+node_modules
+.grok
+.vercel
+.node_modules.lock
+dist
+desktop/ui
+desktop/dist
+artifacts
+screenshots
+public/downloads/*.exe
+*.log
+.env
+.env.*
+.DS_Store
