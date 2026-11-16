@@ -8,7 +8,11 @@ Windows installer: [SnapJinglePlayer-Setup.exe](https://github.com/mvdesignautom
 
 ## Features
 
-- Grid of 12–48 large pads (layout is configurable)
+- Grid of large pads, arranged in one or more decks
+- Multiple profiles (for example Podcast, Gaming, Live show) with independent decks
+- Arrange mode: add, rename, resize, and drag decks on an expanding grid
+- Deck sizes up to 8×8 and 48 buttons, including 2×8
+- Zoom and scroll the workspace; decks snap to the grid and cannot overlap
 - Click a pad to play; drop a WAV / MP3 / OGG file onto a pad to assign it
 - Custom pad name, color, volume, loop, retrigger, and keyboard shortcut
 - Overlapping playback by default (applause + airhorn + applause)
@@ -17,7 +21,7 @@ Windows installer: [SnapJinglePlayer-Setup.exe](https://github.com/mvdesignautom
 - Master volume and mute
 - Configuration saved locally and restored on the next launch
 - Missing audio is flagged instead of crashing — locate, replace, or remove it
-- Export / import a full board backup (pads + a copy of each sound)
+- Export / import a library of profiles, or add one backup as new profiles without replacing the rest
 
 ## Installation (Windows)
 
@@ -41,6 +45,10 @@ Audio is copied into the app’s local store when you assign it. That is deliber
 
 ## How to configure pads
 
+Open **Arrange** to add or move decks. Each deck has its own columns and rows (up to 8 by 8, and at most 48 buttons). Drag a deck by its header. Zoom controls sit above the workspace.
+
+Open **Profiles** to create, rename, duplicate, switch, or delete a board. Switching does not stop sounds that are already playing. The last profile you used is restored on the next launch.
+
 Right-click a pad, or click the pencil on hover.
 
 You can change:
@@ -55,7 +63,7 @@ You can change:
 
 Drag the small grip on a pad to reorder.
 
-Open **Settings** for layout (12 / 16 / 24 / 30 / 48 pads), cut vs overlap, the Stop All hotkey, backup, and reset.
+Open **Settings** for cut vs overlap, the Stop All hotkey, backup, and reset of the active profile. Deck size is edited from Arrange, not from a single global layout.
 
 ## Keyboard shortcuts
 
@@ -79,7 +87,8 @@ System-wide hotkeys (while another app is in front) are **not** registered, so a
 
 **Web / preview**
 
-- Pad layout and settings: browser `localStorage` key `sjp-board-v1`
+- Profiles, decks, and settings: browser `localStorage` key `sjp-board-v1` (version 2)
+- A copy of the pre-migration board is kept in `sjp-board-v1-premigration` the first time an older board is upgraded
 - Audio data: IndexedDB database `sjp-clips-v1`
 
 **Windows app**
@@ -89,9 +98,9 @@ System-wide hotkeys (while another app is in front) are **not** registered, so a
 
 ## Backup / import
 
-Settings → **Export board** writes `snap-jingle-board.json`.
+Settings → **Export library** writes `snap-jingle-library.json`.
 
-That file contains pad names, colors, hotkeys, volumes, layout, and a copy of each assigned sound. Original disk paths are not required after import. Keep a copy of the JSON if you want a portable backup.
+That file contains every profile, deck position, pad names, colors, hotkeys, volumes, and a copy of each assigned sound that is still stored locally. `audioIncluded` is true only when those copies are actually in the file. Older single-board backups still import. Adding a backup keeps your current profiles; replacing the library asks for confirmation first.
 
 Settings → **Import board** replaces the current board with a previously exported file.
 

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 type PadButtonProps = {
   pad: Pad;
   playing: boolean;
+  density?: "regular" | "compact";
   onPlay: () => void;
   onEdit: () => void;
   onContextMenu: (event: MouseEvent) => void;
@@ -24,6 +25,7 @@ function formatDuration(seconds: number | null): string {
 export function PadButton({
   pad,
   playing,
+  density = "regular",
   onPlay,
   onEdit,
   onContextMenu,
@@ -72,6 +74,7 @@ export function PadButton({
     <div
       className={cn(
         "group relative flex min-h-28 flex-col justify-between overflow-hidden rounded-lg border p-3 text-left transition-[transform,background-color,border-color] duration-150 ease-out sm:min-h-32",
+        density === "compact" && "h-full min-h-0 p-2 sm:min-h-0",
         dragOver && "ring-2 ring-accent",
         playing && "brightness-110",
       )}
@@ -125,7 +128,12 @@ export function PadButton({
       </div>
 
       <button type="button" onClick={onPlay} className="flex min-h-16 flex-1 flex-col items-start justify-end text-left">
-        <span className="font-display text-lg leading-tight font-semibold tracking-wide uppercase sm:text-xl">
+        <span
+          className={cn(
+            "font-display leading-tight font-semibold tracking-wide uppercase",
+            density === "compact" ? "text-sm" : "text-lg sm:text-xl",
+          )}
+        >
           {pad.name}
         </span>
         <span className="mt-2 flex w-full items-center justify-between gap-2 text-xs tracking-wide text-foreground/70">

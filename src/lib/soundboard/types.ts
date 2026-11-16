@@ -14,6 +14,32 @@ export type Pad = {
   retrigger: RetriggerMode;
 };
 
+export type Deck = {
+  id: string;
+  name: string;
+  cols: number;
+  rows: number;
+  x: number;
+  y: number;
+  pads: Pad[];
+};
+
+export type Profile = {
+  id: string;
+  name: string;
+  decks: Deck[];
+};
+
+export type PersistedConfig = {
+  profiles: Profile[];
+  activeProfileId: string;
+  masterVolume: number;
+  muted: boolean;
+  exclusive: boolean;
+  stopHotkey: string;
+  seenWelcome: boolean;
+};
+
 export type LayoutId = "3x4" | "4x4" | "4x6" | "5x6" | "6x8";
 
 export type BoardSettings = {
@@ -53,4 +79,27 @@ export type BoardBackup = {
   exportedAt: string;
   settings: Pick<BoardSettings, "layout" | "masterVolume" | "muted" | "exclusive" | "stopHotkey">;
   pads: BackupPad[];
+};
+
+export type BackupDeck = {
+  name: string;
+  cols: number;
+  rows: number;
+  x: number;
+  y: number;
+  pads: BackupPad[];
+};
+
+export type BackupProfile = {
+  name: string;
+  decks: BackupDeck[];
+};
+
+export type LibraryBackup = {
+  version: 2;
+  app: "snap-jingle-player";
+  exportedAt: string;
+  settings: Pick<BoardSettings, "masterVolume" | "muted" | "exclusive" | "stopHotkey">;
+  profiles: BackupProfile[];
+  audioIncluded: boolean;
 };
