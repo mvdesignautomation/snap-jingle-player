@@ -13,7 +13,7 @@ export function Welcome() {
         <h1 className="font-display mt-3 text-3xl font-semibold tracking-tight">Snap Jingle Player</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
           Assign local audio to large pads, trigger them instantly, and keep several sounds overlapping for live use.
-          Everything stays on this device.
+          Profiles such as Podcast or Live show each keep their own decks. Everything stays on this device.
         </p>
         <ul className="mt-5 space-y-2 text-sm text-muted">
           <li>Click a pad to play. Drop a WAV, MP3, or OGG file onto it to assign.</li>

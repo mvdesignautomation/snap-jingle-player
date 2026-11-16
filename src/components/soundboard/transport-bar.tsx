@@ -1,5 +1,4 @@
-import { Download, MoreHorizontal, Settings2, Square, Volume2, VolumeX } from "lucide-react";
-import { layoutById } from "@/lib/soundboard/layout";
+import { Download, LayoutGrid, MoreHorizontal, Settings2, Square, Volume2, VolumeX } from "lucide-react";
 import { codeToLabel } from "@/lib/soundboard/hotkeys";
 import { useBoardStore } from "@/lib/soundboard/store";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 type TransportBarProps = {
   playingCount: number;
+  editingLayout: boolean;
+  onToggleLayout: () => void;
+  onOpenProfiles: () => void;
   onOpenSettings: () => void;
+  onAddDeck: () => void;
 };
 
 function LogoMark() {
@@ -29,18 +32,27 @@ function LogoMark() {
   );
 }
 
-export function TransportBar({ playingCount, onOpenSettings }: TransportBarProps) {
+export function TransportBar({
+  playingCount,
+  editingLayout,
+  onToggleLayout,
+  onOpenProfiles,
+  onOpenSettings,
+  onAddDeck,
+}: TransportBarProps) {
   const masterVolume = useBoardStore((s) => s.masterVolume);
   const muted = useBoardStore((s) => s.muted);
   const exclusive = useBoardStore((s) => s.exclusive);
-  const layout = useBoardStore((s) => s.layout);
+  const profiles = useBoardStore((s) => s.profiles);
+  const activeProfileId = useBoardStore((s) => s.activeProfileId);
   const stopHotkey = useBoardStore((s) => s.stopHotkey);
   const setMasterVolume = useBoardStore((s) => s.setMasterVolume);
   const setMuted = useBoardStore((s) => s.setMuted);
   const setExclusive = useBoardStore((s) => s.setExclusive);
+  const switchProfile = useBoardStore((s) => s.switchProfile);
   const stopAll = useBoardStore((s) => s.stopAll);
   const exportBoard = useBoardStore((s) => s.exportBoard);
-  const padCount = layoutById(layout).rows * layoutById(layout).cols;
+  const active = profiles.find((profile) => profile.id === activeProfileId) ?? profiles[0];
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 px-3 py-3 backdrop-blur-sm sm:px-5">
@@ -50,7 +62,8 @@ export function TransportBar({ playingCount, onOpenSettings }: TransportBarProps
           <div className="min-w-0">
             <p className="font-display truncate text-sm font-semibold tracking-tight sm:text-base">Snap Jingle Player</p>
             <p className="hidden text-xs text-muted sm:block">
-              {padCount} pads · {exclusive ? "cut mode" : "overlap"} · {playingCount} playing
+              {active?.name ?? "Profile"} · {active?.decks.length ?? 0} decks · {exclusive ? "cut mode" : "overlap"} · {playingCount}{" "}
+              playing
             </p>
           </div>
         </div>
@@ -81,6 +94,33 @@ export function TransportBar({ playingCount, onOpenSettings }: TransportBarProps
           </span>
         </div>
 
+        <label className="flex items-center gap-2">
+          <span className="sr-only">Profile</span>
+          <select
+            className="h-9 max-w-40 rounded-md border border-border bg-card px-2 text-sm"
+            value={active?.id ?? ""}
+            onChange={(event) => switchProfile(event.target.value)}
+            aria-label="Profile"
+          >
+            {profiles.map((profile) => (
+              <option key={profile.id} value={profile.id}>
+                {profile.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Button variant="secondary" size="sm" onClick={onOpenProfiles}>
+          Profiles
+        </Button>
+        <Button variant={editingLayout ? "default" : "secondary"} size="sm" onClick={onToggleLayout}>
+          <LayoutGrid className="size-3.5" />
+          <span className="hidden sm:inline">{editingLayout ? "Done" : "Arrange"}</span>
+        </Button>
+        {editingLayout ? (
+          <Button variant="secondary" size="sm" onClick={onAddDeck}>
+            Add deck
+          </Button>
+        ) : null}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

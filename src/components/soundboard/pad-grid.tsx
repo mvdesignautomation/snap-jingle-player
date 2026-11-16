@@ -1,13 +1,13 @@
-import { useEffect, useState, type MouseEvent } from "react";
-import { layoutById } from "@/lib/soundboard/layout";
-import type { LayoutId } from "@/lib/soundboard/types";
+import { useState, type MouseEvent } from "react";
 import type { Pad } from "@/lib/soundboard/types";
 import { PadButton } from "./pad-button";
 import { PadContextMenu } from "./pad-context-menu";
 
 type PadGridProps = {
   pads: Pad[];
-  layoutId: LayoutId;
+  cols: number;
+  rows: number;
+  density?: "regular" | "compact";
   playingIds: Set<string>;
   onPlay: (padId: string) => void;
   onStop: (padId: string) => void;
@@ -21,7 +21,9 @@ type MenuState = { padId: string; x: number; y: number } | null;
 
 export function PadGrid({
   pads,
-  layoutId,
+  cols,
+  rows,
+  density = "regular",
   playingIds,
   onPlay,
   onStop,
@@ -30,20 +32,8 @@ export function PadGrid({
   onDropFile,
   onMove,
 }: PadGridProps) {
-  const layout = layoutById(layoutId);
-  const visible = pads.slice(0, layout.rows * layout.cols);
+  const visible = pads.slice(0, cols * rows);
   const [menu, setMenu] = useState<MenuState>(null);
-  const [narrow, setNarrow] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const apply = () => setNarrow(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  const cols = narrow ? Math.min(2, layout.cols) : layout.cols;
 
   const openMenu = (padId: string, event: MouseEvent) => {
     event.preventDefault();
@@ -53,13 +43,17 @@ export function PadGrid({
   return (
     <>
       <div
-        className="grid gap-2 sm:gap-3"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+        className="grid h-full gap-1.5"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+        }}
       >
         {visible.map((pad) => (
           <PadButton
             key={pad.id}
             pad={pad}
+            density={density}
             playing={playingIds.has(pad.id)}
             onPlay={() => onPlay(pad.id)}
             onEdit={() => onEdit(pad.id)}
