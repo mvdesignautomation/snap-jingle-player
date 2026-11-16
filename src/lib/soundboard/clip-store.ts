@@ -1,4 +1,4 @@
-import type { ClipRecord } from "./types";
+import type { ClipRecord } from "./types.ts";
 
 const DB_NAME = "sjp-clips-v1";
 const STORE = "clips";

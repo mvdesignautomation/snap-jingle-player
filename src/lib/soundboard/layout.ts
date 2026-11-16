@@ -1,4 +1,4 @@
-import type { LayoutId } from "./types";
+import type { LayoutId } from "./types.ts";
 
 export type { LayoutId };
 
